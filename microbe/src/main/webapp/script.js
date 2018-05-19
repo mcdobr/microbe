@@ -23,3 +23,28 @@ $(document).ready(function() {
 		}
 	});
 })
+
+/* When the hash changes the main changes */
+$(window).bind('hashchange', function() {
+
+	var hash = window.location.hash.substr(1);
+	var hashKeyValue = hash.split('=');
+	var tableID = hashKeyValue[0], val = hashKeyValue[1];
+	
+	switch (tableID) {
+	case "leagueID":
+		break;
+	case "teamID":
+		break;
+	case "coachID":
+		break;
+	case "matchID":
+		break;
+	}
+	
+	console.log(hash);
+	console.log(tableID);
+	console.log(val);
+});
+	
+	

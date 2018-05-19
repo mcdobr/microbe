@@ -4,8 +4,7 @@
 	<title>Microbe</title>
 		
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="league.js"></script>
-	<script src="team.js"></script>
+	<script src="script.js"></script>
 </head>
 <body>
 	<h2>Microbe</h2>

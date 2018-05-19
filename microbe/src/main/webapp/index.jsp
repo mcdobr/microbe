@@ -1,8 +1,21 @@
 <html>
+<head>
+	<meta charset="UTF-8">
+	<title>Microbe</title>
+		
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="league.js"></script>
+	<script src="team.js"></script>
+</head>
 <body>
-    <h2>Jersey RESTful Web Application!</h2>
-    <p><a href="webapi/myresource">Jersey resource</a>
-    <p>Visit <a href="http://jersey.java.net">Project Jersey website</a>
-    for more information on Jersey!
+	<h2>Microbe</h2>
+    <p><a href="webapi/coaches">Coaches</a></p>
+    <p><a href="webapi/leagues">Leagues</a></p>
+    <p><a href="webapi/matches">Matches</a></p>
+    <p><a href="webapi/teams">Teams</a></p>
+    
+    <nav id="sidebar"></nav>
+    
+    <main></main>
 </body>
 </html>

@@ -21,13 +21,15 @@ public class League {
 	public static class LeagueBuilder {
 		private Integer leagueID;
 		private String leagueName;
-		
+
+		public LeagueBuilder() {}
 		public LeagueBuilder(Integer leagueID, String leagueName) {
 			super();
 			this.leagueID = leagueID;
 			this.leagueName = leagueName;
 		}
 		
+
 		public League build() {
 			return new League(leagueID, leagueName);
 		}

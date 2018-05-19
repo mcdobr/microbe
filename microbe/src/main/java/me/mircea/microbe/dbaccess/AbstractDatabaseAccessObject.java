@@ -21,7 +21,7 @@ public class AbstractDatabaseAccessObject {
 			dbProps.load(new FileInputStream(rootPath + "db.properties"));
 			
 			sql = new Properties();
-			sql.load(new FileInputStream(rootPath + "sql.properties"));
+			sql.load(new FileInputStream(rootPath + "queries.properties"));
 			
 			Class.forName(dbProps.getProperty("jdbcDriver"));
 			conn = DriverManager.getConnection(dbProps.getProperty("url"),
@@ -33,12 +33,17 @@ public class AbstractDatabaseAccessObject {
 	}
 	
 	protected ResultSet getResourceById(String sqlStatement, Integer id) throws SQLException {
-		ResultSet rs = null;
-		
 		statement = conn.prepareStatement(sql.getProperty(sqlStatement));
 		statement.setInt(1, id);
 		
-		rs = statement.executeQuery();
+		ResultSet rs = statement.executeQuery();
+		return rs;
+	}
+	
+	protected ResultSet getAllResources(String sqlStatement) throws SQLException {
+		statement = conn.prepareStatement(sql.getProperty(sqlStatement));
+		ResultSet rs = statement.executeQuery();
+		
 		return rs;
 	}
 	

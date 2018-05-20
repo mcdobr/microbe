@@ -37,6 +37,8 @@ public class Team {
 		private Integer leagueID;
 		private Integer coachID;
 		
+		public TeamBuilder() {}
+		
 		public TeamBuilder(Integer teamID, String teamName, Integer leagueID, Integer coachID) {
 			super();
 			this.teamID = teamID;
@@ -44,7 +46,7 @@ public class Team {
 			this.leagueID = leagueID;
 			this.coachID = coachID;
 		}
-		
+
 		public Team build() {
 			return new Team(teamID, teamName, leagueID, coachID);
 		}

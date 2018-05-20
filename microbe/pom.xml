@@ -40,14 +40,15 @@
     <dependencies>
         <!-- Servlet dependencies -->
         <dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+		</dependency>
+		
+        <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet-core</artifactId>
         </dependency>
         
-        <dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-servlet</artifactId>
-		</dependency>
 		
 		<dependency>
 		    <groupId>javax.servlet</groupId>
@@ -55,6 +56,8 @@
 		    <version>4.0.0</version>
 		    <scope>provided</scope>
 		</dependency>
+        
+        
         
         <!-- Other jersey dependencies -->
         <dependency>

@@ -93,5 +93,4 @@ public class LeagueDAO extends AbstractDatabaseAccessObject {
 		}
 		return lb;
 	}
-
 }

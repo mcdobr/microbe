@@ -33,6 +33,7 @@ $(window).bind('hashchange', function() {
 	
 	switch (tableID) {
 	case "leagueID":
+		displayLeague(val);
 		break;
 	case "teamID":
 		break;
@@ -42,9 +43,34 @@ $(window).bind('hashchange', function() {
 		break;
 	}
 	
+	/*
 	console.log(hash);
 	console.log(tableID);
-	console.log(val);
+	console.log(val);*/
 });
-	
-	
+function displayLeague(leagueID) {
+	$.ajax({
+		type: 'GET',
+		url: apiPath + 'teams/query?leagueID=' + leagueID,
+		dataType: 'json',
+		success : function(jsonData) {
+			/* Create table headings */
+			var headingsRow = $("<tr>");
+			headingsRow.append($("<th>Team</th>"));
+
+			/* Add data rows */
+			var table = $("<table>");
+			table.append(headingsRow);
+			
+			jQuery.each(jsonData, function (i, team) {
+				console.log(team);
+				var tr = $("<tr>");
+				tr.append("<td><a href='#teamID=" + team.teamID + "'>" + team.teamName + "</a></td>");
+				table.append(tr);
+			});
+			
+			$("main").empty();
+			$("main").append(table);
+		}
+	});
+}

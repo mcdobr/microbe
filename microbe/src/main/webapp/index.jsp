@@ -5,17 +5,18 @@
 	
 	<link rel="stylesheet" href="style.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="requests.js"></script>
 	<script src="script.js"></script>
 </head>
 <body>
-	<h2>Microbe</h2>
-    <p><a href="webapi/coaches">Coaches</a></p>
-    <p><a href="webapi/leagues">Leagues</a></p>
-    <p><a href="webapi/matches">Matches</a></p>
-    <p><a href="webapi/teams">Teams</a></p>
+	<header>
+		<h2>Microbe</h2>
+    </header>
     
     <nav id="sidebar"></nav>
     
     <main></main>
+    
+    <footer>&copy; 2018 Mircea Dobreanu</footer>
 </body>
 </html>

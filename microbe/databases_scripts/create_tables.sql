@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS teams (
 	
 	CONSTRAINT pk_team PRIMARY KEY (teamID),
 	CONSTRAINT uk_team UNIQUE KEY (teamName),
+	CONSTRAINT uk_coach_team UNIQUE KEY(coachID),
 	CONSTRAINT fk_league_team FOREIGN KEY (leagueID) REFERENCES leagues(leagueID),
 	CONSTRAINT fk_coach_team FOREIGN KEY (coachID) REFERENCES coaches(coachID)
 );
@@ -32,6 +33,8 @@ CREATE TABLE IF NOT EXISTS matches (
 	matchID	INT UNSIGNED AUTO_INCREMENT,
 	homeTeamID INT UNSIGNED NOT NULL,
 	awayTeamID INT UNSIGNED NOT NULL,
+	homeGoals INT UNSIGNED NOT NULL DEFAULT 0,
+	awayGoals INT UNSIGNED NOT NULL DEFAULT 0,
 	playDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 	
 	CONSTRAINT pk_match PRIMARY KEY (matchID),
@@ -88,11 +91,11 @@ INSERT INTO teams VALUES (default, 'Real Madrid', 4, 4);
 INSERT INTO teams VALUES (default, 'FC Barcelona', 4, 7);
 
 /* Matches inserts */
-INSERT INTO matches VALUES (default, 1, 2, '2018-01-07 20:30:00');
-INSERT INTO matches VALUES (default, 1, 3, '2018-02-12 21:45:00');
-INSERT INTO matches VALUES (default, 2, 1, '2018-03-02 16:45:00');
-INSERT INTO matches VALUES (default, 3, 1, '2018-06-06 18:30:00');
-INSERT INTO matches VALUES (default, 2, 3, '2018-05-21 19:00:00');
+INSERT INTO matches VALUES (default, 1, 2, 2, 0, '2018-01-07 20:30:00');
+INSERT INTO matches VALUES (default, 1, 3, 3, 1, '2018-02-12 21:45:00');
+INSERT INTO matches VALUES (default, 2, 1, 5, 2, '2018-03-02 16:45:00');
+INSERT INTO matches VALUES (default, 3, 1, 1, 1, '2018-06-06 18:30:00');
+INSERT INTO matches VALUES (default, 2, 3, 0, 0, '2018-05-21 19:00:00');
 
 /* Players inserts */
 /*

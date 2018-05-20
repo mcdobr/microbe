@@ -53,6 +53,12 @@ public class TeamDAO extends AbstractDatabaseAccessObject {
 			statement.setInt(2, t.getLeagueID());
 			statement.setInt(3, t.getCoachID());
 			statement.executeUpdate();
+			
+			ResultSet rs = statement.getGeneratedKeys();
+			int lastID = -1;
+			if (rs.next())
+				lastID = rs.getInt(1);
+			persistTeam = getTeam(lastID);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -67,6 +73,7 @@ public class TeamDAO extends AbstractDatabaseAccessObject {
 			statement.setInt(2, t.getLeagueID());
 			statement.setInt(3, t.getCoachID());
 			statement.setInt(4, t.getTeamID());
+			statement.executeUpdate();
 			wasReplaced = true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -96,6 +103,12 @@ public class TeamDAO extends AbstractDatabaseAccessObject {
 				break;
 			case "teamname":
 				tb.withTeamName(rs.getString("teamName"));
+				break;
+			case "leagueid":
+				tb.withLeagueID(rs.getInt("leagueID"));
+				break;
+			case "coachid":
+				tb.withCoachID(rs.getInt("coachID"));
 				break;
 			}
 		}

@@ -21,7 +21,9 @@ public class Coach {
 	public static class CoachBuilder {
 		private Integer coachID;
 		private String coachName;
-		
+
+		public CoachBuilder() {}
+
 		public CoachBuilder(Integer coachID, String coachName) {
 			super();
 			this.coachID = coachID;
@@ -37,7 +39,7 @@ public class Coach {
 			return this;
 		}
 		
-		public CoachBuilder getCoachName(String coachName) {
+		public CoachBuilder withCoachName(String coachName) {
 			this.coachName = coachName;
 			return this;
 		}

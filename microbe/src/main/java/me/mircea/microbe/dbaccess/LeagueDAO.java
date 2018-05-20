@@ -47,6 +47,14 @@ public class LeagueDAO extends AbstractDatabaseAccessObject {
 		try {
 			statement = conn.prepareStatement(sql.getProperty("createLeague"), Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, l.getLeagueName());
+			statement.executeUpdate();
+			
+			ResultSet rs = statement.getGeneratedKeys();
+			
+			int lastID = -1;
+			if (rs.next())
+				lastID = rs.getInt(1);
+			persistLeague = getLeague(lastID);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -59,6 +67,7 @@ public class LeagueDAO extends AbstractDatabaseAccessObject {
 			statement = conn.prepareStatement(sql.getProperty("replaceLeague"));
 			statement.setString(1, l.getLeagueName());
 			statement.setInt(2, l.getLeagueID());
+			statement.executeUpdate();
 			wasReplaced = true;
 		} catch (SQLException e) {
 			e.printStackTrace();

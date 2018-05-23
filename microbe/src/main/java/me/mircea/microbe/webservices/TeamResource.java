@@ -36,6 +36,8 @@ public class TeamResource extends AbstractResource {
 	
 	@PUT
 	@Path("{teamID}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response replaceTeam(Team t, @PathParam("teamID") int teamID) {
 		boolean success = true;
 		if (t.getTeamID() == 0)

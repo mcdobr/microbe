@@ -38,6 +38,8 @@ public class MatchResource extends AbstractResource {
 	
 	@PUT
 	@Path("{matchID}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response replaceMatch(Match m, @PathParam("matchID") int matchID) {
 		boolean success = true;
 		if (m.getMatchID() == 0)

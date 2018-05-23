@@ -2,6 +2,8 @@ package me.mircea.microbe.core;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.*;
+
 public class Match {
 	private final Integer matchID;
 	private final Integer homeTeamID;
@@ -10,12 +12,13 @@ public class Match {
 	private final Integer awayGoals;
 	private final LocalDateTime playDate;
 	
-	public Match(Integer matchID,
-			Integer homeTeamID,
-			Integer awayTeamID,
-			Integer homeGoals,
-			Integer awayGoals,
-			LocalDateTime playDate) {
+	@JsonCreator
+	public Match(@JsonProperty("matchID") Integer matchID,
+			@JsonProperty("homeTeamID") Integer homeTeamID,
+			@JsonProperty("awayTeamID") Integer awayTeamID,
+			@JsonProperty("homeGoals") Integer homeGoals,
+			@JsonProperty("awayGoals") Integer awayGoals,
+			@JsonProperty("playDate") LocalDateTime playDate) {
 		super();
 		this.matchID = matchID;
 		this.homeTeamID = homeTeamID;

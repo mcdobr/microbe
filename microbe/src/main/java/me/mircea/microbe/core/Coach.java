@@ -1,10 +1,14 @@
 package me.mircea.microbe.core;
 
+import com.fasterxml.jackson.annotation.*;
+
 public class Coach {
 	private final Integer coachID;
 	private final String coachName;
 	
-	public Coach(Integer coachID, String coachName) {
+	@JsonCreator
+	public Coach(@JsonProperty("coachID") Integer coachID,
+			@JsonProperty("coachName") String coachName) {
 		super();
 		this.coachID = coachID;
 		this.coachName = coachName;

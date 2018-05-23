@@ -1,10 +1,14 @@
 package me.mircea.microbe.core;
 
+import com.fasterxml.jackson.annotation.*;
+
 public class League {
 	private final Integer leagueID;
 	private final String leagueName;
 	
-	public League(Integer leagueID, String leagueName) {
+	@JsonCreator
+	public League(@JsonProperty("leagueID") Integer leagueID,
+			@JsonProperty("leagueName") String leagueName) {
 		super();
 		this.leagueID = leagueID;
 		this.leagueName = leagueName;

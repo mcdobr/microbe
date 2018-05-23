@@ -37,6 +37,8 @@ public class CoachResource extends AbstractResource {
 	
 	@PUT
 	@Path("{coachID}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response replaceCoach(Coach c, @PathParam("coachID") int coachID) {
 		boolean success = true;
 		if (c.getCoachID() == 0)

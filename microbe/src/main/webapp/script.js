@@ -1,29 +1,31 @@
 API_PATH = 'http://localhost:8080/microbe/webapi/'
 
-$(document).ready(function() {
+/* When the hash changes the main changes */
+$(window).bind('hashchange', displayDispatcher);
+$(document).ready(displayDispatcher);
+
+function displaySidebar() {
+	$('nav').empty();
 	jQuery.get(API_PATH + 'leagues', function(jsonData) {
 		var ul = $("<ul>");
 		jQuery.each(jsonData, function (i, league) {
 			ul.append("<li><a href='#leagueID=" + league.leagueID + "'>" + league.leagueName + "</a></li>");
 		});
-			
-		$('#sidebar').empty();
-		$('#sidebar').append(ul);
-		$('#sidebar').append("<button>Create league</button>");
+
+		$('nav').empty();
+		$('nav').append(ul);
+		$('nav').append("<button>Create league</button>");
 	}, 'json');
-});
-
-
-/* When the hash changes the main changes */
-$(window).bind('hashchange', displayDispatcher);
-
-
+}
 
 function displayDispatcher() {
+	$('main').empty();
+	displaySidebar();
+
 	var hash = window.location.hash.substr(1);
 	var hashKeyValue = hash.split('=');
 	var tableID = hashKeyValue[0], val = hashKeyValue[1];
-	
+
 	switch (tableID) {
 	case "leagueID":
 		displayLeague(val);
@@ -46,121 +48,81 @@ function displayLeague(leagueID) {
 		type: 'GET',
 		url: API_PATH + 'teams/query?leagueID=' + leagueID,
 		dataType: 'json',
-		success : function(jsonData) {
-			/* Create table headings */
-			var headingsRow = $("<tr>");
-			headingsRow.append($("<th>Team</th>"));
-			headingsRow.append($("<th>GP</th>"));
-			headingsRow.append($("<th>Wins</th>"));
-			headingsRow.append($("<th>Draws</th>"));
-			headingsRow.append($("<th>Losses</th>"));
-			headingsRow.append($("<th>GF</th>"));
-			headingsRow.append($("<th>GA</th>"));
-			headingsRow.append($("<th>GD</th>"));
-			headingsRow.append($("<th>Points</th>"));
-			headingsRow.append($("<th></th><th></th>"));
-			
-			var thead = $("<thead>");
-			thead.append(headingsRow);	
-			var tbody = $("<tbody>");
-			jQuery.each(jsonData, function (i, team) {
-				console.log(team);
-				var tr = $("<tr>");
-				tr.append("<td><a href='#teamID=" + team.teamID + "'>" + team.teamName + "</a></td>");
-				
-				teamPath = API_PATH + 'matches/query?teamID=' + team.teamID;
-				console.log(teamPath);
-				jQuery.get(teamPath, function(teamMatches) {
-					console.log(teamMatches);
-					tr.append("<td>" + teamMatches.length + "</td>");
-					
-					var wins = 0, draws = 0, losses = 0;
-					var goalsFor = 0, goalsAgainst = 0;
-					teamMatches.forEach(function(match) {
-						console.log(match);
-						
-						if (match.homeGoals == match.awayGoals) {
-							++draws;
-						} else if (match.homeTeamID == team.teamID) {
-							goalsFor += match.homeGoals;
-							goalsAgainst += match.awayGoals;
-							
-							if (match.homeGoals > match.awayGoals)
-								++wins;
-							else
-								++losses;
-						} else if (match.awayTeamID == team.teamID) {
-							goalsFor += match.awayGoals;
-							goalsAgainst += match.homeGoals;
-							
-							if (match.awayGoals > match.homeGoals)
-								++wins;
-							else
-								++losses;
-						}
-					});
-					var goalsDiff = goalsFor - goalsAgainst;
-					var points = 3 * wins + draws;
-					tr.append(`<td>${wins}</td>
-								<td>${draws}</td>
-								<td>${losses}</td>
-								<td class="gf">${goalsFor}</td>
-								<td class="ga">${goalsAgainst}</td>
-								<td class="gd">${goalsDiff}</td>
-								<td class="pts">${points}</td>`);
-					tr.append(`<td><button class="editBtn">Edit</button></td>
-								<td><button class="deleteBtn">Delete</button></td>`);
-					
-					$(tr).find(".deleteBtn").click(function() {
-						$.ajax({
-							url: API_PATH + "teams/" + team.teamID,
-							type: "DELETE",
-							success: function() {
-								location.reload();
-							}
-						});
-					});
-					
-					//tr.append("<td>" + teamMatches.length + "</td>")
-				}, 'json');
-				
-				tbody.append(tr);
-			});
-			
-			$('tbody > tr').sort(compareTeams).appendTo('tbody');
-			var table = $("<table>");
-			table.append(thead);
-			table.append(tbody);
-			
-			$("main").empty();
-			$("main").append(table);
-			$("main").append("<button>Create team</button>");
-		}
+		success : getStandings
 	});
 }
 
 function displayTeam(teamID) {
-	jQuery.get(API_PATH + 'teams/' + teamID, function(team){
+	jQuery.get(getTeamURL(teamID), function(team) {
 		$("main").empty();
 		$("main").append(`<h2>${team.teamName}</h2>`);
+
+		var thead = $('<thead>');
+		thead.append(`<tr>
+						<td>Home team</td>
+						<td>Score</td>
+						<td>Away team</td>
+						<td>Play date</td>
+					</tr>`);
 		
 		
+		
+		var tbody = $('<tbody>');
+		var table = $('<table>');
+		table.append(thead);
+		table.append(tbody);
+		$("main").append(table);
+
+		// Get all matches of team
+		$.ajax({
+			type: 'GET',
+			url: API_PATH + 'matches/query?teamID=' + teamID,
+			dataType: 'json',
+			success: function(teamMatches) {
+				var tbody = $('tbody');
+				console.log(tbody);
+				teamMatches.forEach(function(match) {
+					console.log(match);
+					
+					$.when(
+						$.ajax({
+							url: getTeamURL(match.homeTeamID),
+							dataType: 'json'
+						}), 
+						$.ajax({
+							url: getTeamURL(match.awayTeamID),
+							dataType: 'json'
+						}))
+					.then(function (homeResponse, awayResponse) {
+						var homeTeam = homeResponse[0];
+						var awayTeam = awayResponse[0];
+						
+						var jsDate = isoToJS(match.playDate);
+						
+						console.log(homeTeam);
+						console.log(awayTeam);
+						tbody.append(`<tr>
+								<td>${homeTeam.teamName}</td>
+								<td>${match.homeGoals} - ${match.awayGoals}</td>
+								<td>${awayTeam.teamName}</td>
+								<td>${jsDate}</td>
+								</tr>`);
+					});
+				});
+		}});
 	}, 'json');
 }
 
 function displayMatch(matchID) {
-	jQuery.get(API_PATH + 'matches/' + matchID, function(match){
+	jQuery.get(getMatchURL(matchID), function(match){
 		$("main").empty();
-		
-		
+
+
 	}, 'json');
 }
 
 function displayCoach(coachID) {
-	var coachPath = API_PATH + "coaches/" + coachID;
-	jQuery.get(coachPath, function(coach){
-		console.log(coachPath);
-		console.log(coach);
+	jQuery.get(getCoachURL(coachID), function(coach){
 		$("main").empty();
 		$("main").append(`<h2>${coach.coachName}</h2>`);
 	}, 'json');
@@ -170,12 +132,22 @@ function compareTeams(team1, team2) {
 	// Different points
 	if (+$('td.pts', team2).text() != +$('td.pts', team1).text())
 		return +$('td.pts', team2).text() > +$('td.pts', team1).text();
-	
+
 	// Equal points
 	if (+$('td.gd', team2).text() != +$('td.gd', team1).text())
 		return +$('td.gd', team2).text() > +$('td.gd', team1).text();
-		
+
 	// Equal goal diff
 	return +$('td.gd', team2).text() > +$('td.gd', team1).text();
-		
+}
+
+function getFormData(data) {
+   var unindexed_array = data;
+   var indexed_array = {};
+
+   $.map(unindexed_array, function(n, i) {
+    indexed_array[n['name']] = n['value'];
+   });
+
+   return indexed_array;
 }

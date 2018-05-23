@@ -39,7 +39,9 @@ CREATE TABLE IF NOT EXISTS matches (
 	
 	CONSTRAINT pk_match PRIMARY KEY (matchID),
 	CONSTRAINT uk_match UNIQUE KEY (homeTeamID, awayTeamID, playDate),
-	CONSTRAINT ck_match CHECK (homeTeamID != awayTeamID)
+	CONSTRAINT ck_match CHECK (homeTeamID != awayTeamID),
+	CONSTRAINT fk_homeTeam_match FOREIGN KEY(homeTeamID) REFERENCES teams(teamID),
+	CONSTRAINT fk_awayTeam_match FOREIGN KEY(awayTeamID) REFERENCES teams(teamID)
 );
 
 /*
